@@ -18,23 +18,44 @@ abstract class Dao<T, K> {
     public T create(T t) {
         EntityTransaction entityTransaction = em.getTransaction();
         entityTransaction.begin();
-        em.persist(t);
-        entityTransaction.commit();
-        return t;
+        try {
+            em.persist(t);
+            entityTransaction.commit();
+            return t;
+        } catch (RuntimeException exception) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw exception;
+        }
     }
 
     public T update(T t) {
         EntityTransaction entityTransaction = em.getTransaction();
         entityTransaction.begin();
-        em.merge(t);
-        entityTransaction.commit();
-        return t;
+        try {
+            T updated = em.merge(t);
+            entityTransaction.commit();
+            return updated;
+        } catch (RuntimeException exception) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw exception;
+        }
     }
 
     public void delete(T t) {
         EntityTransaction entityTransaction = em.getTransaction();
         entityTransaction.begin();
-        em.remove(t);
-        entityTransaction.commit();
+        try {
+            em.remove(t);
+            entityTransaction.commit();
+        } catch (RuntimeException exception) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw exception;
+        }
     }
 }

@@ -29,6 +29,10 @@ public class Teacher {
         return idTeacher;
     }
 
+    public void setIdTeacher(Integer idTeacher) {
+        this.idTeacher = idTeacher;
+    }
+
     public String getFirstName() {
         return firstName;
     }
@@ -37,4 +41,29 @@ public class Teacher {
         this.firstName = firstName;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
+
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "idTeacher=" + idTeacher +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", courses=" + courses +
+                '}';
+    }
 }
