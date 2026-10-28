@@ -3,6 +3,8 @@ package dao;
 import idao.ICourseDao;
 import models.Course;
 
+import java.util.List;
+
 public class CourseDao extends Dao<Course, Integer> implements ICourseDao {
     @Override
     public Course find(Integer id) {
@@ -15,5 +17,11 @@ public class CourseDao extends Dao<Course, Integer> implements ICourseDao {
                 .stream()
                 .findFirst()
                 .orElse(null);
+    }
+    @Override
+    public List<Course> listCoursesByTeacherLastName(String lastName) {
+        return em.createQuery(
+                        "SELECT c FROM Course c WHERE c.teacher.lastName = :ln", Course.class)
+                .setParameter("ln", lastName).getResultList();
     }
 }

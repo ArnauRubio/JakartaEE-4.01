@@ -3,6 +3,9 @@ package dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
+import models.Student;
+
+import java.util.List;
 
 abstract class Dao<T, K> {
     EntityManager em = Persistence

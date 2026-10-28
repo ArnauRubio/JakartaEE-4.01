@@ -1,9 +1,14 @@
 import dao.CourseDao;
+import dao.StudentDao;
 import dao.TeacherDao;
+import idao.IStudentDao;
 import models.Course;
 import models.CourseMaterial;
+import models.Student;
 import models.Teacher;
 import jakarta.persistence.EntityTransaction;
+
+import java.time.LocalDate;
 
 public class App {
     public static void main(String[] args) {
@@ -11,12 +16,13 @@ public class App {
         CourseDao courseDao = new CourseDao();
 
         try {
+
             //Tarea1
-            Teacher teacher = new Teacher("Profesor", "Persistente");
+            Teacher teacher = new Teacher("Sheldon", "Copper");
             teacherDao.create(teacher);
             System.out.println("Profesor creado con id " + teacher.getIdTeacher());
 
-            Course course = new Course("Curso persistido", teacher);
+            Course course = new Course("Fisica AvanzadaIII", teacher);
             courseDao.create(course);
             System.out.println("Curso creado con id " + course.getIdCourse());
 
@@ -74,6 +80,48 @@ public class App {
             }
             System.out.println("Material encontrado desde Course: "
                     + loadedCourseWithMaterial.getMaterial().getUrl());
+
+            //Tarea6
+            StudentDao studentDao = new StudentDao();
+            Student s1 = new Student();
+            s1.setFirstName("Ana");
+            s1.setLastName("Pérez");
+            s1.setBirthDate(LocalDate.of(2000, 1, 1));
+            Student s2 = new Student();
+            s2.setFirstName("Luis");
+            s2.setLastName("Gómez");
+            s2.setBirthDate(LocalDate.of(2001, 5, 10));
+
+            Course c = new Course("Acceso a Datos", teacher);
+            c.addStudent(s1);
+            c.addStudent(s2);
+            courseDao.create(c);
+
+            Student s3 = new Student();
+            s3.setFirstName("Eva");
+            s3.setLastName("Ruiz");
+            s3.setBirthDate(LocalDate.of(1999, 3, 3));
+            course.addStudent(s3);
+            courseDao.update(course);
+
+            System.out.println(courseDao.find(c.getIdCourse()));
+
+            //Tarea7
+            Student nuevo = new Student();
+            nuevo.setFirstName("Marta");
+            nuevo.setLastName("Sanz");
+            nuevo.setBirthDate(LocalDate.of(2002, 7, 7));
+            nuevo.addCourse(course);
+            nuevo.addCourse(c);
+            studentDao.create(nuevo);
+            System.out.println("Estudiante creado con id " + nuevo.getIdStudent());
+
+            //Tarea8
+            courseDao.listCoursesByTeacherLastName("Copper").forEach(System.out::println);
+
+            //Tarea9
+            studentDao.listStudentsByCourseId(c.getIdCourse()).forEach(s ->
+                    System.out.println("Estudiante: " + s.getFirstName() + " " + s.getLastName()));
         } finally {
             courseDao.getEntityManager().close();
             teacherDao.getEntityManager().close();
